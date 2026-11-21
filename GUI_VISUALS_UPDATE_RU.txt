@@ -1,0 +1,10 @@
+GUI update — Snow и Hook Visuals
+================================
+
+В панели Visuals добавлены интерактивные настройки:
+- Snow: Enabled и Intensity (1–10), связанные с m_KxSnowEnabled и m_KxSnowIntensity.
+- Hook Visuals: Style (Classic / Neon / Electric / Tentacle), связанный с m_KxHookVisualStyle.
+- Значения синхронизируются с сохранёнными настройками и изменениями через консоль.
+
+Используются существующие реализации в effects.cpp (снег) и players.cpp (стили крюка).
+Изменён интерфейс ClickGUI и привязки контролов; новые эффекты рендеринга здесь не добавлялись.

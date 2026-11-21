@@ -1,0 +1,35 @@
+name: Build Kinetix for Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Get DDNet dependency libraries
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://github.com/ddnet/ddnet-libs.git ddnet-libs
+
+      - name: Configure Release build
+        shell: pwsh
+        run: |
+          cmake -S . -B build -A x64 -DCMAKE_BUILD_TYPE=Release -DVULKAN=OFF -DDOWNLOAD_GTEST=OFF
+
+      - name: Build Windows package
+        shell: pwsh
+        run: |
+          cmake --build build --config Release --target package_default --parallel
+
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kinetix-Windows
+          path: build/*.zip
+          if-no-files-found: error

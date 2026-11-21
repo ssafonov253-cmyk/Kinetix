@@ -1,0 +1,16 @@
+KINETIX — GitHub Windows build
+
+1. Extract this archive on your PC.
+2. In your GitHub repository, use Add file -> Upload files and upload the
+   extracted CONTENTS (not this ZIP as a single file). Keep the .github folder.
+3. Open Actions -> Build Kinetix for Windows -> Run workflow.
+4. When the run finishes, download the Kinetix-Windows artifact.
+
+This compact upload archive omits the ddnet-libs submodule (the workflow clones
+it during the build) and two large optional font files:
+  data/fonts/SourceHanSans.ttc
+  data/fonts/GlowSansJ-Compressed-Book.otf
+
+The source has not been compiled or tested in this environment. The workflow
+may need adjustment if the source revision has additional build requirements.
+The resulting artifact is produced by GitHub Actions, not included here.
