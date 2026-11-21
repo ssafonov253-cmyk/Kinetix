@@ -1,16 +1,15 @@
-KINETIX — GitHub Windows build
+СБОРКА WINDOWS EXE ЧЕРЕЗ GITHUB ACTIONS
+========================================
 
-1. Extract this archive on your PC.
-2. In your GitHub repository, use Add file -> Upload files and upload the
-   extracted CONTENTS (not this ZIP as a single file). Keep the .github folder.
-3. Open Actions -> Build Kinetix for Windows -> Run workflow.
-4. When the run finishes, download the Kinetix-Windows artifact.
+1. Создай на GitHub новый пустой репозиторий (можно Private).
+2. Распакуй содержимое этого архива на компьютере.
+3. Загрузи ВСЕ файлы и папки из распакованной папки в корень репозитория.
+   Важно: папка .github тоже должна попасть в репозиторий.
+4. Открой репозиторий -> Actions -> Build Kinetix Windows EXE.
+5. Нажми Run workflow -> Run workflow.
+6. Дождись завершения. Если сборка успешна, открой запуск workflow и скачай
+   Artifact с именем Kinetix-Windows-build.
 
-This compact upload archive omits the ddnet-libs submodule (the workflow clones
-it during the build) and two large optional font files:
-  data/fonts/SourceHanSans.ttc
-  data/fonts/GlowSansJ-Compressed-Book.otf
-
-The source has not been compiled or tested in this environment. The workflow
-may need adjustment if the source revision has additional build requirements.
-The resulting artifact is produced by GitHub Actions, not included here.
+В артефакте будет DDNet.exe и, если CMake создал пакет, ZIP со всеми файлами.
+Сборка может завершиться ошибкой, если исходный код содержит ошибки компиляции.
+Наличие workflow не означает, что EXE уже собран или проверен.

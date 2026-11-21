@@ -1,0 +1,63 @@
+name: Build Kinetix Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Configure
+        shell: pwsh
+        run: >-
+          cmake -S . -B build -A x64
+          -DCMAKE_BUILD_TYPE=Release
+          -DCLIENT=ON -DSERVER=OFF -DTOOLS=OFF
+          -DVULKAN=OFF -DVIDEORECORDER=OFF
+          -DDOWNLOAD_GTEST=OFF
+          -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=.
+
+      - name: Build client
+        shell: pwsh
+        run: cmake --build build --config Release --target game-client --parallel
+
+      - name: Package Windows client
+        shell: pwsh
+        run: cmake --build build --config Release --target package_default
+
+      - name: Collect EXE and package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          $exe = Get-ChildItem build -Filter DDNet.exe -Recurse | Select-Object -First 1
+          if (-not $exe) { throw 'DDNet.exe was not produced by the build.' }
+          Copy-Item $exe.FullName artifacts/DDNet.exe
+          $pkg = Get-ChildItem build -Filter '*win64.zip' -Recurse | Select-Object -First 1
+          if ($pkg) { Copy-Item $pkg.FullName artifacts/ }
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kinetix-Windows-build
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 14
